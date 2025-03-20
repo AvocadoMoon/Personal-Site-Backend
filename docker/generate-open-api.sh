@@ -14,30 +14,23 @@ fi
 
 #docker run --rm -v ${scriptDir}:/local ${generatorCliImage} config-help -g java
 
-docker run --rm -v ${parentDir}:/vcell \
+docker run --rm -v ${parentDir}:/local \
     ${generatorCliImage} \
     generate \
     -g java \
-    -i /vcell/tools/openapi.yaml \
-    -o /vcell/vcell-restclient \
-    -c /vcell/tools/java-config.yaml
+    -i /local/docker/openapi.yaml \
+    -o /local/java-client \
+    -c /local/docker/java-config.yaml
 
-# Apply the patch to AdminResourceApi.java to treat getUsage() as a PDF file rather than a JSON file
-pushd "${parentDir}" || { echo "Failed to change directory to ${parentDir}"; exit 1; }
-if ! git apply "${scriptDir}/AdminResourceApi.patch"; then
-  echo "Failed to apply AdminResourceApi.patch"
-  exit 1
-fi
-if ! git apply "${scriptDir}/SolverResourceApi.patch"; then
-  echo "Failed to apply SolverResourceApi.patch"
-  exit 1
-fi
-popd || { echo "Failed to return to the previous directory"; exit 1; }
-
-docker run --rm -v ${parentDir}:/vcell \
+docker run --rm -v ${parentDir}:/local \
 ${generatorCliImage} generate \
     -g typescript-angular \
-    -i /vcell/tools/openapi.yaml \
-    -o /vcell/webapp-ng/src/app/core/modules/openapi \
-    -c /vcell/tools/typescript-angular-config.yaml
+    -i /local/docker/openapi.yaml \
+    -o /local/webapp-ng/src/app/core/modules/openapi \
+    -c /local/docker/typescript-config.yaml
+
+cd ..
+
+sudo chown zek:zek -R webapp-ng
+sudo chown zek:zek -R java-client
 

@@ -1,0 +1,33 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /api/v1/geoCache:
+    post:
+      tags:
+      - geo-cache
+      operationId: receiveSubmission
+      parameters:
+      - name: geoCacheSubmission
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/GeoCacheSubmission"
+      responses:
+        "200":
+          description: OK
+components:
+  schemas:
+    GeoCacheSubmission:
+      type: object
+      properties:
+        name:
+          type: string
+        note:
+          type: string
+        secret:
+          type: string

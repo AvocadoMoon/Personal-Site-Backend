@@ -16,32 +16,27 @@ additionalProperties:
   # config options specific to the java generator
   # see https://openapi-generator.tech/docs/generators/java/
 
-  groupId: org.vcell
-  artifactId: vcell-restclient
+  groupId: com.ezequiel
+  artifactId: ezequiel-client
   artifactVersion: 1.0.0
   artifactUrl: https://github.com/virtualcell/vcell-restclient
 
-  parentGroupId: org.vcell
-  parentArtifactId: vcell-pom
+  parentGroupId: com.ezequiel
+  parentArtifactId: ezequiel-pom
   parentVersion: 0.0.1-SNAPSHOT
 
-  apiPackage: org.vcell.restclient.api
-  invokerPackage: org.vcell.restclient
-  modelPackage: org.vcell.restclient.model
+  apiPackage: com.ezequiel.api
+  invokerPackage: com.ezequiel
+  modelPackage: com.ezequiel.model
   snapshotVersion: true # or false to use a release version
 
-  developerEmail: schaff@uchc.edu
-  developerName: Jim Schaff
-  developerOrganization: Center for Cell Analysis and Modeling
-  developerOrganizationUrl: https://vcell.org
-  licenseName: MIT License
-  licenseUrl: https://opensource.org/licenses/MIT
-  scmUrl: https://github.com/virtualcell/vcell.git
+  developerEmail: wzeke123@gmail.com
+  developerName: Ezequiel Valencia
+  developerOrganizationUrl: https://ezequielvalencia.com
 
   #  library: okhttp-gson
   library: native
   containerDefaultToNull: false # default
-  dateLibrary: java8 # default
   disallowAdditionalPropertiesIfNotPresent: true # default, but not compliant with OAS and JSON schema specifications
   enumUnknownDefaultCase: false # default
   hideGenerationTimestamp: true
