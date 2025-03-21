@@ -9,29 +9,41 @@ paths:
   /api/v1/geoCache:
     post:
       operationId: receiveSubmission
-      parameters:
-      - explode: true
-        in: query
-        name: geoCacheSubmission
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GeoCacheSubmission'
         required: true
-        schema:
-          $ref: '#/components/schemas/GeoCacheSubmission'
-        style: form
       responses:
         "200":
           description: OK
       tags:
       - geo-cache
+      x-content-type: application/json
       x-accepts: application/json
 components:
   schemas:
     GeoCacheSubmission:
+      example:
+        note: note
+        name: name
+        secret: secret
       properties:
         name:
+          maxLength: 50
+          minLength: 3
+          pattern: "/[ -~]/"
           type: string
         note:
+          maxLength: 250
+          minLength: 3
+          pattern: "/[ -~]/"
           type: string
         secret:
+          maxLength: 50
+          minLength: 3
+          pattern: "/[ -~]/"
           type: string
       type: object
 

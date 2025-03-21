@@ -50,7 +50,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **geoCacheSubmission** | [**GeoCacheSubmission**](.md)|  | |
+| **geoCacheSubmission** | [**GeoCacheSubmission**](GeoCacheSubmission.md)|  | |
 
 ### Return type
 
@@ -63,7 +63,7 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
+- **Content-Type**: application/json
 - **Accept**: Not defined
 
 ### HTTP response details
@@ -115,7 +115,7 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **geoCacheSubmission** | [**GeoCacheSubmission**](.md)|  | |
+| **geoCacheSubmission** | [**GeoCacheSubmission**](GeoCacheSubmission.md)|  | |
 
 ### Return type
 
@@ -128,7 +128,7 @@ No authorization required
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
+- **Content-Type**: application/json
 - **Accept**: Not defined
 
 ### HTTP response details

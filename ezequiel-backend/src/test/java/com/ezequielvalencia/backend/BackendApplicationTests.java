@@ -6,13 +6,12 @@ import com.ezequiel.Configuration;
 import com.ezequiel.api.GeoCacheApi;
 import com.ezequiel.model.GeoCacheSubmission;
 import com.ezequielvalencia.backend.db.DBHandler;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.Assert;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -66,7 +65,23 @@ class BackendApplicationTests {
 		defaultClient.setHost("localhost");
 		defaultClient.setScheme("http");
 		GeoCacheApi geoCacheApi = new GeoCacheApi(defaultClient);
-		geoCacheApi.receiveSubmission(new GeoCacheSubmission());
+
+		// Empty, below char size, non ASCII
+		GeoCacheSubmission[] failedSubmissions = {new GeoCacheSubmission(), new GeoCacheSubmission().name("j"), new GeoCacheSubmission().name("fff").note("ffff").secret("€")};
+
+		for (GeoCacheSubmission sub : failedSubmissions){
+			try{
+				geoCacheApi.receiveSubmission(sub);
+				throw new RuntimeException("Request didn't throw an error");
+			} catch (ApiException e){
+				Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), e.getCode(), "Submission can't be empty");
+			}
+		}
+
+		GeoCacheSubmission validSubmission = new GeoCacheSubmission().name("Zeke").note("Hello world!").secret("Shhhh");
+		geoCacheApi.receiveSubmission(validSubmission);
+
+
 	}
 
 
