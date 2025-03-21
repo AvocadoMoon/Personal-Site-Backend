@@ -9,9 +9,9 @@
 |------------ | ------------- | ------------- | -------------|
 |**name** | **String** |  |  |
 |**note** | **String** |  |  |
-|**secret** | **String** |  |  |
-|**longitude** | **String** |  |  |
-|**latitude** | **String** |  |  |
+|**secret** | **String** |  |  [optional] |
+|**longitude** | **String** |  |  [optional] |
+|**latitude** | **String** |  |  [optional] |
 |**date** | **String** |  |  [optional] |
 
 

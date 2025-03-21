@@ -3,6 +3,7 @@ package com.ezequielvalencia.backend.controller;
 import com.ezequielvalencia.backend.db.GeoCacheRepo;
 import com.ezequielvalencia.backend.models.db.GeoCacheDBModel;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -40,6 +41,7 @@ public class GeoCache {
         ));
     }
 
+    @ApiResponse(responseCode = "200")
     @GetMapping(value = "/{pageNumber}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(operationId = "getSubmission", description = "Retrieve geo cache submission.")
     public List<GeoCacheSubmission> giveSubmission(@PathVariable Integer pageNumber){

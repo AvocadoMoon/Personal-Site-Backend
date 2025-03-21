@@ -47,11 +47,8 @@ components:
   schemas:
     GeoCacheSubmission:
       required:
-      - latitude
-      - longitude
       - name
       - note
-      - secret
       type: object
       properties:
         name:
@@ -66,17 +63,17 @@ components:
           type: string
         secret:
           maxLength: 50
-          minLength: 3
+          minLength: 0
           pattern: "^[ -~]+$"
           type: string
         longitude:
           maxLength: 20
-          minLength: 1
+          minLength: 0
           pattern: "^[ -~]+$"
           type: string
         latitude:
           maxLength: 20
-          minLength: 1
+          minLength: 0
           pattern: "^[ -~]+$"
           type: string
         date:

@@ -121,9 +121,9 @@ public class GeoCacheSubmission {
    * Get secret
    * @return secret
   **/
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_SECRET)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public String getSecret() {
     return secret;
@@ -131,7 +131,7 @@ public class GeoCacheSubmission {
 
 
   @JsonProperty(JSON_PROPERTY_SECRET)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setSecret(String secret) {
     this.secret = secret;
   }
@@ -146,9 +146,9 @@ public class GeoCacheSubmission {
    * Get longitude
    * @return longitude
   **/
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_LONGITUDE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public String getLongitude() {
     return longitude;
@@ -156,7 +156,7 @@ public class GeoCacheSubmission {
 
 
   @JsonProperty(JSON_PROPERTY_LONGITUDE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setLongitude(String longitude) {
     this.longitude = longitude;
   }
@@ -171,9 +171,9 @@ public class GeoCacheSubmission {
    * Get latitude
    * @return latitude
   **/
-  @javax.annotation.Nonnull
+  @javax.annotation.Nullable
   @JsonProperty(JSON_PROPERTY_LATITUDE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
   public String getLatitude() {
     return latitude;
@@ -181,7 +181,7 @@ public class GeoCacheSubmission {
 
 
   @JsonProperty(JSON_PROPERTY_LATITUDE)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
   public void setLatitude(String latitude) {
     this.latitude = latitude;
   }

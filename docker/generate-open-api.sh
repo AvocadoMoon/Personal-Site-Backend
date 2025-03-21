@@ -24,13 +24,13 @@ docker run --rm -v ${parentDir}:/local \
 
 docker run --rm -v ${parentDir}:/local \
 ${generatorCliImage} generate \
-    -g typescript-angular \
+    -g typescript-fetch \
     -i /local/docker/openapi.yaml \
-    -o /local/webapp-ng/src/app/core/modules/openapi \
+    -o /local/typescript-client \
     -c /local/docker/typescript-config.yaml
 
 cd ..
 
-sudo chown zek:zek -R webapp-ng
+sudo chown zek:zek -R typescript-client
 sudo chown zek:zek -R java-client
 
