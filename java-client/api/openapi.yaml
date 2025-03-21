@@ -8,7 +8,8 @@ servers:
 paths:
   /api/v1/geoCache:
     post:
-      operationId: receiveSubmission
+      description: Send a geo cache submission to the endpoint.
+      operationId: sendSubmission
       requestBody:
         content:
           application/json:
@@ -22,28 +23,74 @@ paths:
       - geo-cache
       x-content-type: application/json
       x-accepts: application/json
+  /api/v1/geoCache/{pageNumber}:
+    get:
+      description: Retrieve geo cache submission.
+      operationId: getSubmission
+      parameters:
+      - explode: false
+        in: path
+        name: pageNumber
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/GeoCacheSubmission'
+                type: array
+          description: OK
+      tags:
+      - geo-cache
+      x-accepts: application/json
 components:
   schemas:
     GeoCacheSubmission:
       example:
+        date: date
         note: note
+        latitude: latitude
         name: name
         secret: secret
+        longitude: longitude
       properties:
         name:
           maxLength: 50
           minLength: 3
-          pattern: "/[ -~]/"
+          pattern: "^[ -~]+$"
           type: string
         note:
           maxLength: 250
           minLength: 3
-          pattern: "/[ -~]/"
+          pattern: "^[ -~]+$"
           type: string
         secret:
           maxLength: 50
           minLength: 3
-          pattern: "/[ -~]/"
+          pattern: "^[ -~]+$"
           type: string
+        longitude:
+          maxLength: 20
+          minLength: 1
+          pattern: "^[ -~]+$"
+          type: string
+        latitude:
+          maxLength: 20
+          minLength: 1
+          pattern: "^[ -~]+$"
+          type: string
+        date:
+          type: string
+      required:
+      - latitude
+      - longitude
+      - name
+      - note
+      - secret
       type: object
 

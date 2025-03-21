@@ -7,9 +7,12 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**name** | **String** |  |  [optional] |
-|**note** | **String** |  |  [optional] |
-|**secret** | **String** |  |  [optional] |
+|**name** | **String** |  |  |
+|**note** | **String** |  |  |
+|**secret** | **String** |  |  |
+|**longitude** | **String** |  |  |
+|**latitude** | **String** |  |  |
+|**date** | **String** |  |  [optional] |
 
 
 

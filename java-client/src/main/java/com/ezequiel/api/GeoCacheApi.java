@@ -83,23 +83,25 @@ public class GeoCacheApi {
 
   /**
    * 
-   * 
-   * @param geoCacheSubmission  (required)
+   * Retrieve geo cache submission.
+   * @param pageNumber  (required)
+   * @return List&lt;GeoCacheSubmission&gt;
    * @throws ApiException if fails to make API call
    */
-  public void receiveSubmission(GeoCacheSubmission geoCacheSubmission) throws ApiException {
-    receiveSubmissionWithHttpInfo(geoCacheSubmission);
+  public List<GeoCacheSubmission> getSubmission(Integer pageNumber) throws ApiException {
+    ApiResponse<List<GeoCacheSubmission>> localVarResponse = getSubmissionWithHttpInfo(pageNumber);
+    return localVarResponse.getData();
   }
 
   /**
    * 
-   * 
-   * @param geoCacheSubmission  (required)
-   * @return ApiResponse&lt;Void&gt;
+   * Retrieve geo cache submission.
+   * @param pageNumber  (required)
+   * @return ApiResponse&lt;List&lt;GeoCacheSubmission&gt;&gt;
    * @throws ApiException if fails to make API call
    */
-  public ApiResponse<Void> receiveSubmissionWithHttpInfo(GeoCacheSubmission geoCacheSubmission) throws ApiException {
-    HttpRequest.Builder localVarRequestBuilder = receiveSubmissionRequestBuilder(geoCacheSubmission);
+  public ApiResponse<List<GeoCacheSubmission>> getSubmissionWithHttpInfo(Integer pageNumber) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = getSubmissionRequestBuilder(pageNumber);
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
           localVarRequestBuilder.build(),
@@ -109,7 +111,77 @@ public class GeoCacheApi {
       }
       try {
         if (localVarResponse.statusCode()/ 100 != 2) {
-          throw getApiException("receiveSubmission", localVarResponse);
+          throw getApiException("getSubmission", localVarResponse);
+        }
+        return new ApiResponse<List<GeoCacheSubmission>>(
+          localVarResponse.statusCode(),
+          localVarResponse.headers().map(),
+          localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<GeoCacheSubmission>>() {}) // closes the InputStream
+        );
+      } finally {
+      }
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
+
+  private HttpRequest.Builder getSubmissionRequestBuilder(Integer pageNumber) throws ApiException {
+    // verify the required parameter 'pageNumber' is set
+    if (pageNumber == null) {
+      throw new ApiException(400, "Missing the required parameter 'pageNumber' when calling getSubmission");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/api/v1/geoCache/{pageNumber}"
+        .replace("{pageNumber}", ApiClient.urlEncode(pageNumber.toString()));
+
+    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
+    if (memberVarReadTimeout != null) {
+      localVarRequestBuilder.timeout(memberVarReadTimeout);
+    }
+    if (memberVarInterceptor != null) {
+      memberVarInterceptor.accept(localVarRequestBuilder);
+    }
+    return localVarRequestBuilder;
+  }
+  /**
+   * 
+   * Send a geo cache submission to the endpoint.
+   * @param geoCacheSubmission  (required)
+   * @throws ApiException if fails to make API call
+   */
+  public void sendSubmission(GeoCacheSubmission geoCacheSubmission) throws ApiException {
+    sendSubmissionWithHttpInfo(geoCacheSubmission);
+  }
+
+  /**
+   * 
+   * Send a geo cache submission to the endpoint.
+   * @param geoCacheSubmission  (required)
+   * @return ApiResponse&lt;Void&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public ApiResponse<Void> sendSubmissionWithHttpInfo(GeoCacheSubmission geoCacheSubmission) throws ApiException {
+    HttpRequest.Builder localVarRequestBuilder = sendSubmissionRequestBuilder(geoCacheSubmission);
+    try {
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+          localVarRequestBuilder.build(),
+          HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }
+      try {
+        if (localVarResponse.statusCode()/ 100 != 2) {
+          throw getApiException("sendSubmission", localVarResponse);
         }
         return new ApiResponse<Void>(
           localVarResponse.statusCode(),
@@ -132,10 +204,10 @@ public class GeoCacheApi {
     }
   }
 
-  private HttpRequest.Builder receiveSubmissionRequestBuilder(GeoCacheSubmission geoCacheSubmission) throws ApiException {
+  private HttpRequest.Builder sendSubmissionRequestBuilder(GeoCacheSubmission geoCacheSubmission) throws ApiException {
     // verify the required parameter 'geoCacheSubmission' is set
     if (geoCacheSubmission == null) {
-      throw new ApiException(400, "Missing the required parameter 'geoCacheSubmission' when calling receiveSubmission");
+      throw new ApiException(400, "Missing the required parameter 'geoCacheSubmission' when calling sendSubmission");
     }
 
     HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();

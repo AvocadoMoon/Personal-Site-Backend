@@ -8,11 +8,15 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.annotation.RequestScope;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -31,14 +35,20 @@ public class GeoCache {
     @Operation(operationId = "sendSubmission", description = "Send a geo cache submission to the endpoint.")
     public void takeSubmission(@Valid @RequestBody GeoCacheSubmission geoCacheSubmission){
         geoCacheRepo.saveAndFlush(new GeoCacheDBModel(
-                geoCacheSubmission.name, geoCacheSubmission.note, geoCacheSubmission.secret, LocalDate.now()
+                geoCacheSubmission.name, geoCacheSubmission.note, geoCacheSubmission.secret, LocalDateTime.now(),
+                geoCacheSubmission.latitude, geoCacheSubmission.longitude
         ));
     }
 
-    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public GeoCacheSubmission giveSubmission(){
-        List<GeoCacheDBModel> allSubmissions = geoCacheRepo.findAll();
-        return new GeoCacheSubmission(allSubmissions.get(0).username, allSubmissions.get(0).note, allSubmissions.get(0).secret, allSubmissions.get(0).date.toString());
+    @GetMapping(value = "/{pageNumber}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(operationId = "getSubmission", description = "Retrieve geo cache submission.")
+    public List<GeoCacheSubmission> giveSubmission(@PathVariable Integer pageNumber){
+        PageRequest pageRequest = PageRequest.of(pageNumber, 10);
+        Page<GeoCacheDBModel> allSubmissions = geoCacheRepo.findAll(pageRequest);
+        List<GeoCacheSubmission> dtoSubmissions = allSubmissions.map((geoCacheDBModel -> {
+            return new GeoCacheSubmission(geoCacheDBModel.username, geoCacheDBModel.note, geoCacheDBModel.secret, geoCacheDBModel.date.toLocalDate().toString(), geoCacheDBModel.latitude, geoCacheDBModel.longitude);
+        })).getContent();
+        return dtoSubmissions;
     }
 
     public static class GeoCacheSubmission{
@@ -52,17 +62,25 @@ public class GeoCache {
         @Pattern(regexp = GeoCache.printableCharsOnlyRegex,  message = "Not printable characters: note.")
         public String note;
 
-        @NotNull
-        @Size(max = 50, min = 3, message = "Size discrepancy: secret.")
+        @Size(max = 50, message = "Size discrepancy: secret.")
         @Pattern(regexp = GeoCache.printableCharsOnlyRegex, message = "Not printable characters: secret.")
-        public String secret;
+        public String secret = "";
 
+        @Size(max = 20, message = "Size discrepancy: longitude.")
+        @Pattern(regexp = GeoCache.printableCharsOnlyRegex, message = "Not printable characters: secret.")
+        public String longitude = "";
+
+        @Size(max = 20, message = "Size discrepancy: latitude.")
+        @Pattern(regexp = GeoCache.printableCharsOnlyRegex, message = "Not printable characters: secret.")
+        public String latitude = "";
+
+        // Added on return
         public String date;
 
         public GeoCacheSubmission(){}
 
-        public GeoCacheSubmission(String name, String note, String secret, String date){
-            this.name = name; this.note = note; this.secret = secret; this.date = date;
+        public GeoCacheSubmission(String name, String note, String secret, String date, String latitude, String longitude){
+            this.name = name; this.note = note; this.secret = secret; this.date = date; this.latitude = latitude; this.longitude = longitude;
         }
     }
 }

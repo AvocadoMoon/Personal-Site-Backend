@@ -83,11 +83,12 @@ public class GeoCacheApiExample {
         // Configure clients using the `defaultClient` object, such as
         // overriding the host and port, timeout, etc.
         GeoCacheApi apiInstance = new GeoCacheApi(defaultClient);
-        GeoCacheSubmission geoCacheSubmission = new GeoCacheSubmission(); // GeoCacheSubmission | 
+        Integer pageNumber = 56; // Integer | 
         try {
-            apiInstance.receiveSubmission(geoCacheSubmission);
+            List<GeoCacheSubmission> result = apiInstance.getSubmission(pageNumber);
+            System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling GeoCacheApi#receiveSubmission");
+            System.err.println("Exception when calling GeoCacheApi#getSubmission");
             System.err.println("Status code: " + e.getCode());
             System.err.println("Reason: " + e.getResponseBody());
             System.err.println("Response headers: " + e.getResponseHeaders());
@@ -104,8 +105,10 @@ All URIs are relative to *http://localhost:8080*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*GeoCacheApi* | [**receiveSubmission**](docs/GeoCacheApi.md#receiveSubmission) | **POST** /api/v1/geoCache | 
-*GeoCacheApi* | [**receiveSubmissionWithHttpInfo**](docs/GeoCacheApi.md#receiveSubmissionWithHttpInfo) | **POST** /api/v1/geoCache | 
+*GeoCacheApi* | [**getSubmission**](docs/GeoCacheApi.md#getSubmission) | **GET** /api/v1/geoCache/{pageNumber} | 
+*GeoCacheApi* | [**getSubmissionWithHttpInfo**](docs/GeoCacheApi.md#getSubmissionWithHttpInfo) | **GET** /api/v1/geoCache/{pageNumber} | 
+*GeoCacheApi* | [**sendSubmission**](docs/GeoCacheApi.md#sendSubmission) | **POST** /api/v1/geoCache | 
+*GeoCacheApi* | [**sendSubmissionWithHttpInfo**](docs/GeoCacheApi.md#sendSubmissionWithHttpInfo) | **POST** /api/v1/geoCache | 
 
 
 ## Documentation for Models

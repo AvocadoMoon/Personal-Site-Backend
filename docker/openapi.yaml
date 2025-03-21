@@ -10,7 +10,8 @@ paths:
     post:
       tags:
       - geo-cache
-      operationId: receiveSubmission
+      description: Send a geo cache submission to the endpoint.
+      operationId: sendSubmission
       requestBody:
         content:
           application/json:
@@ -20,23 +21,63 @@ paths:
       responses:
         "200":
           description: OK
+  /api/v1/geoCache/{pageNumber}:
+    get:
+      tags:
+      - geo-cache
+      description: Retrieve geo cache submission.
+      operationId: getSubmission
+      parameters:
+      - name: pageNumber
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GeoCacheSubmission"
 components:
   schemas:
     GeoCacheSubmission:
+      required:
+      - latitude
+      - longitude
+      - name
+      - note
+      - secret
       type: object
       properties:
         name:
           maxLength: 50
           minLength: 3
-          pattern: "/[ -~]/"
+          pattern: "^[ -~]+$"
           type: string
         note:
           maxLength: 250
           minLength: 3
-          pattern: "/[ -~]/"
+          pattern: "^[ -~]+$"
           type: string
         secret:
           maxLength: 50
           minLength: 3
-          pattern: "/[ -~]/"
+          pattern: "^[ -~]+$"
+          type: string
+        longitude:
+          maxLength: 20
+          minLength: 1
+          pattern: "^[ -~]+$"
+          type: string
+        latitude:
+          maxLength: 20
+          minLength: 1
+          pattern: "^[ -~]+$"
+          type: string
+        date:
           type: string

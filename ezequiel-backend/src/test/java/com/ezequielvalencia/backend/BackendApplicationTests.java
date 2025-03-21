@@ -18,6 +18,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class BackendApplicationTests {
@@ -71,7 +73,7 @@ class BackendApplicationTests {
 
 		for (GeoCacheSubmission sub : failedSubmissions){
 			try{
-				geoCacheApi.receiveSubmission(sub);
+				geoCacheApi.sendSubmission(sub);
 				throw new RuntimeException("Request didn't throw an error");
 			} catch (ApiException e){
 				Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), e.getCode(), "Submission can't be empty");
@@ -79,9 +81,26 @@ class BackendApplicationTests {
 		}
 
 		GeoCacheSubmission validSubmission = new GeoCacheSubmission().name("Zeke").note("Hello world!").secret("Shhhh");
-		geoCacheApi.receiveSubmission(validSubmission);
+		geoCacheApi.sendSubmission(validSubmission);
 
+		List<GeoCacheSubmission> submissions = geoCacheApi.getSubmission(0);
+		GeoCacheSubmission justPosted = submissions.get(0);
+		Assertions.assertEquals(validSubmission.getName(), justPosted.getName());
+		Assertions.assertEquals(LocalDate.now().toString(), justPosted.getDate());
 
+		GeoCacheSubmission secondSubmission = new GeoCacheSubmission().name("Zeke2").note("Second post.");
+		geoCacheApi.sendSubmission(secondSubmission);
+		submissions = geoCacheApi.getSubmission(0);
+		Assertions.assertEquals(submissions.removeFirst().getName(), "Zeke2", "Zeke posted first so he should be on the bottom.");
+
+		for (int i = 1; i <= 10; i++){
+			geoCacheApi.sendSubmission(validSubmission.name("Num: " + i));
+		}
+		GeoCacheSubmission firstPage = geoCacheApi.getSubmission(0).removeFirst();
+		Assertions.assertEquals(firstPage.getName(), "Num: 10");
+
+		GeoCacheSubmission secondPage = geoCacheApi.getSubmission(1).removeFirst();
+		Assertions.assertEquals(secondPage.getName(), "Zeke2");
 	}
 
 

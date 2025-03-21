@@ -42,13 +42,5 @@ public class GeoCacheApiTest {
      * @throws ApiException
      *          if the Api call fails
      */
-    @Test
-    public void receiveSubmissionTest() throws ApiException {
-        GeoCacheSubmission geoCacheSubmission = null;
-        
-        api.receiveSubmission(geoCacheSubmission);
-        
-        // TODO: test validations
-    }
     
 }
