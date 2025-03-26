@@ -11,12 +11,10 @@ import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.annotation.RequestScope;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,7 +25,7 @@ public class GeoCache {
 
 //    https://docs.oracle.com/javase/6/docs/api/java/util/regex/Pattern.html
 //    https://stackoverflow.com/questions/1247762/regex-for-all-printable-characters
-    public static final String printableCharsOnlyRegex = "^[ -~]+$";
+    public static final String printableCharsOnlyOrEmptyRegex = "^$|^[ -~]+$";
 
     @Autowired
     GeoCacheRepo geoCacheRepo;
@@ -55,25 +53,25 @@ public class GeoCache {
 
     public static class GeoCacheSubmission{
         @NotNull
-        @Size(max = 50, min = 3, message = "Size discrepancy: name.")
-        @Pattern(regexp = GeoCache.printableCharsOnlyRegex, message = "Not printable characters: name.")
+        @Size(max = 15, min = 3, message = "Size discrepancy: name.")
+        @Pattern(regexp = GeoCache.printableCharsOnlyOrEmptyRegex, message = "Not printable characters: name.")
         public String name;
 
         @NotNull
         @Size(max = 250, min = 3, message = "Size discrepancy: note.")
-        @Pattern(regexp = GeoCache.printableCharsOnlyRegex,  message = "Not printable characters: note.")
+        @Pattern(regexp = GeoCache.printableCharsOnlyOrEmptyRegex,  message = "Not printable characters: note.")
         public String note;
 
         @Size(max = 50, message = "Size discrepancy: secret.")
-        @Pattern(regexp = GeoCache.printableCharsOnlyRegex, message = "Not printable characters: secret.")
+        @Pattern(regexp = GeoCache.printableCharsOnlyOrEmptyRegex, message = "Not printable characters: secret.")
         public String secret = "";
 
-        @Size(max = 20, message = "Size discrepancy: longitude.")
-        @Pattern(regexp = GeoCache.printableCharsOnlyRegex, message = "Not printable characters: secret.")
+        @Size(max = 15, message = "Size discrepancy: longitude.")
+        @Pattern(regexp = GeoCache.printableCharsOnlyOrEmptyRegex, message = "Not printable characters: longitude.")
         public String longitude = "";
 
-        @Size(max = 20, message = "Size discrepancy: latitude.")
-        @Pattern(regexp = GeoCache.printableCharsOnlyRegex, message = "Not printable characters: secret.")
+        @Size(max = 15, message = "Size discrepancy: latitude.")
+        @Pattern(regexp = GeoCache.printableCharsOnlyOrEmptyRegex, message = "Not printable characters: latitude.")
         public String latitude = "";
 
         // Added on return
