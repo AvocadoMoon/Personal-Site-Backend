@@ -30,9 +30,11 @@ public class DBHandler {
     private JdbcTemplate template;
 
 //    @Autowired
-//    public DBHandler(JdbcTemplate dataSource){
-//        template = dataSource;
-//    }
+    public DBHandler(JdbcTemplate dataSource){
+        template = dataSource;
+    }
+
+    public DBHandler(){ }
 
     public void createTables() throws URISyntaxException, IOException {
         URL sqlURL = DBHandler.class.getClassLoader().getResource("tables.sql");

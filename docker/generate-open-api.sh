@@ -34,3 +34,4 @@ cd ..
 sudo chown zek:zek -R typescript-client
 sudo chown zek:zek -R java-client
 
+mv typescript-client ../AvocadoMoon.github.io/src/backend-api/
