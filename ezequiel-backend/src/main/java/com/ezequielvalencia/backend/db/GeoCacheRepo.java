@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 public interface GeoCacheRepo extends JpaRepository<GeoCacheDBModel, Integer> {
 
     @Override
-    @Query(value = "SELECT g.id, g.username, g.note, g.latitude, g.longitude, g.secret, g.date " +
+    @Query(value = "SELECT g.id, g.username, g.note, g.latitude, g.longitude, g.secret, g.date, g.location_name " +
             "FROM geo_cache g ORDER BY g.date DESC", nativeQuery = true)
     @NotNull
     Page<GeoCacheDBModel> findAll(Pageable pageable);

@@ -10,8 +10,9 @@
 |**name** | **String** |  |  |
 |**note** | **String** |  |  |
 |**secret** | **String** |  |  [optional] |
-|**longitude** | **String** |  |  [optional] |
-|**latitude** | **String** |  |  [optional] |
+|**locationName** | **String** |  |  [optional] |
+|**longitude** | **Double** |  |  [optional] |
+|**latitude** | **Double** |  |  [optional] |
 |**date** | **String** |  |  [optional] |
 
 

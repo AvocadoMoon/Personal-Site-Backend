@@ -35,6 +35,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
   GeoCacheSubmission.JSON_PROPERTY_NAME,
   GeoCacheSubmission.JSON_PROPERTY_NOTE,
   GeoCacheSubmission.JSON_PROPERTY_SECRET,
+  GeoCacheSubmission.JSON_PROPERTY_LOCATION_NAME,
   GeoCacheSubmission.JSON_PROPERTY_LONGITUDE,
   GeoCacheSubmission.JSON_PROPERTY_LATITUDE,
   GeoCacheSubmission.JSON_PROPERTY_DATE
@@ -50,11 +51,14 @@ public class GeoCacheSubmission {
   public static final String JSON_PROPERTY_SECRET = "secret";
   private String secret;
 
+  public static final String JSON_PROPERTY_LOCATION_NAME = "locationName";
+  private String locationName;
+
   public static final String JSON_PROPERTY_LONGITUDE = "longitude";
-  private String longitude;
+  private Double longitude;
 
   public static final String JSON_PROPERTY_LATITUDE = "latitude";
-  private String latitude;
+  private Double latitude;
 
   public static final String JSON_PROPERTY_DATE = "date";
   private String date;
@@ -137,7 +141,32 @@ public class GeoCacheSubmission {
   }
 
 
-  public GeoCacheSubmission longitude(String longitude) {
+  public GeoCacheSubmission locationName(String locationName) {
+    this.locationName = locationName;
+    return this;
+  }
+
+   /**
+   * Get locationName
+   * @return locationName
+  **/
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_LOCATION_NAME)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getLocationName() {
+    return locationName;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_LOCATION_NAME)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setLocationName(String locationName) {
+    this.locationName = locationName;
+  }
+
+
+  public GeoCacheSubmission longitude(Double longitude) {
     this.longitude = longitude;
     return this;
   }
@@ -150,19 +179,19 @@ public class GeoCacheSubmission {
   @JsonProperty(JSON_PROPERTY_LONGITUDE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public String getLongitude() {
+  public Double getLongitude() {
     return longitude;
   }
 
 
   @JsonProperty(JSON_PROPERTY_LONGITUDE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setLongitude(String longitude) {
+  public void setLongitude(Double longitude) {
     this.longitude = longitude;
   }
 
 
-  public GeoCacheSubmission latitude(String latitude) {
+  public GeoCacheSubmission latitude(Double latitude) {
     this.latitude = latitude;
     return this;
   }
@@ -175,14 +204,14 @@ public class GeoCacheSubmission {
   @JsonProperty(JSON_PROPERTY_LATITUDE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
 
-  public String getLatitude() {
+  public Double getLatitude() {
     return latitude;
   }
 
 
   @JsonProperty(JSON_PROPERTY_LATITUDE)
   @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
-  public void setLatitude(String latitude) {
+  public void setLatitude(Double latitude) {
     this.latitude = latitude;
   }
 
@@ -227,6 +256,7 @@ public class GeoCacheSubmission {
     return Objects.equals(this.name, geoCacheSubmission.name) &&
         Objects.equals(this.note, geoCacheSubmission.note) &&
         Objects.equals(this.secret, geoCacheSubmission.secret) &&
+        Objects.equals(this.locationName, geoCacheSubmission.locationName) &&
         Objects.equals(this.longitude, geoCacheSubmission.longitude) &&
         Objects.equals(this.latitude, geoCacheSubmission.latitude) &&
         Objects.equals(this.date, geoCacheSubmission.date);
@@ -234,7 +264,7 @@ public class GeoCacheSubmission {
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, note, secret, longitude, latitude, date);
+    return Objects.hash(name, note, secret, locationName, longitude, latitude, date);
   }
 
   @Override
@@ -244,6 +274,7 @@ public class GeoCacheSubmission {
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    note: ").append(toIndentedString(note)).append("\n");
     sb.append("    secret: ").append(toIndentedString(secret)).append("\n");
+    sb.append("    locationName: ").append(toIndentedString(locationName)).append("\n");
     sb.append("    longitude: ").append(toIndentedString(longitude)).append("\n");
     sb.append("    latitude: ").append(toIndentedString(latitude)).append("\n");
     sb.append("    date: ").append(toIndentedString(date)).append("\n");
@@ -307,6 +338,11 @@ public class GeoCacheSubmission {
     // add `secret` to the URL query string
     if (getSecret() != null) {
       joiner.add(String.format("%ssecret%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getSecret()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
+    }
+
+    // add `locationName` to the URL query string
+    if (getLocationName() != null) {
+      joiner.add(String.format("%slocationName%s=%s", prefix, suffix, URLEncoder.encode(String.valueOf(getLocationName()), StandardCharsets.UTF_8).replaceAll("\\+", "%20")));
     }
 
     // add `longitude` to the URL query string

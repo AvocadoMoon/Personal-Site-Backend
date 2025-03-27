@@ -35,7 +35,8 @@ public class GeoCache {
     public void takeSubmission(@Valid @RequestBody GeoCacheSubmission geoCacheSubmission){
         geoCacheRepo.saveAndFlush(new GeoCacheDBModel(
                 geoCacheSubmission.name, geoCacheSubmission.note, geoCacheSubmission.secret, LocalDateTime.now(),
-                geoCacheSubmission.latitude, geoCacheSubmission.longitude
+                geoCacheSubmission.latitude, geoCacheSubmission.longitude,
+                geoCacheSubmission.locationName
         ));
     }
 
@@ -46,7 +47,10 @@ public class GeoCache {
         PageRequest pageRequest = PageRequest.of(pageNumber, 10);
         Page<GeoCacheDBModel> allSubmissions = geoCacheRepo.findAll(pageRequest);
         List<GeoCacheSubmission> dtoSubmissions = allSubmissions.map((geoCacheDBModel -> {
-            return new GeoCacheSubmission(geoCacheDBModel.username, geoCacheDBModel.note, geoCacheDBModel.secret, geoCacheDBModel.date.toLocalDate().toString(), geoCacheDBModel.latitude, geoCacheDBModel.longitude);
+            return new GeoCacheSubmission(geoCacheDBModel.username, geoCacheDBModel.note, geoCacheDBModel.secret,
+                    geoCacheDBModel.date.toLocalDate().toString(),
+                    geoCacheDBModel.latitude, geoCacheDBModel.longitude,
+                    geoCacheDBModel.location_name);
         })).getContent();
         return dtoSubmissions;
     }
@@ -66,21 +70,24 @@ public class GeoCache {
         @Pattern(regexp = GeoCache.printableCharsOnlyOrEmptyRegex, message = "Not printable characters: secret.")
         public String secret = "";
 
-        @Size(max = 15, message = "Size discrepancy: longitude.")
-        @Pattern(regexp = GeoCache.printableCharsOnlyOrEmptyRegex, message = "Not printable characters: longitude.")
-        public String longitude = "";
+        @Size(max = 50, message = "Size discrepancy: location name.")
+        @Pattern(regexp = GeoCache.printableCharsOnlyOrEmptyRegex, message = "Not printable characters: secret.")
+        public String locationName = "";
 
-        @Size(max = 15, message = "Size discrepancy: latitude.")
-        @Pattern(regexp = GeoCache.printableCharsOnlyOrEmptyRegex, message = "Not printable characters: latitude.")
-        public String latitude = "";
+        public Double longitude;
+
+        public Double latitude;
 
         // Added on return
         public String date;
 
         public GeoCacheSubmission(){}
 
-        public GeoCacheSubmission(String name, String note, String secret, String date, String latitude, String longitude){
-            this.name = name; this.note = note; this.secret = secret; this.date = date; this.latitude = latitude; this.longitude = longitude;
+        public GeoCacheSubmission(String name, String note, String secret, String date,
+                                  Double latitude, Double longitude, String locationName){
+            this.name = name; this.note = note; this.secret = secret;
+            this.date = date; this.latitude = latitude; this.longitude = longitude;
+            this.locationName = locationName;
         }
     }
 }

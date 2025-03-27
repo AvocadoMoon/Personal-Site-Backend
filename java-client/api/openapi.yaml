@@ -54,36 +54,38 @@ components:
       example:
         date: date
         note: note
-        latitude: latitude
+        locationName: locationName
+        latitude: 6.027456183070403
         name: name
         secret: secret
-        longitude: longitude
+        longitude: 0.8008281904610115
       properties:
         name:
-          maxLength: 50
+          maxLength: 15
           minLength: 3
-          pattern: "^[ -~]+$"
+          pattern: "^$|^[ -~]+$"
           type: string
         note:
           maxLength: 250
           minLength: 3
-          pattern: "^[ -~]+$"
+          pattern: "^$|^[ -~]+$"
           type: string
         secret:
           maxLength: 50
           minLength: 0
-          pattern: "^[ -~]+$"
+          pattern: "^$|^[ -~]+$"
+          type: string
+        locationName:
+          maxLength: 50
+          minLength: 0
+          pattern: "^$|^[ -~]+$"
           type: string
         longitude:
-          maxLength: 20
-          minLength: 0
-          pattern: "^[ -~]+$"
-          type: string
+          format: double
+          type: number
         latitude:
-          maxLength: 20
-          minLength: 0
-          pattern: "^[ -~]+$"
-          type: string
+          format: double
+          type: number
         date:
           type: string
       required:

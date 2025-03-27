@@ -4,8 +4,9 @@ CREATE TABLE IF NOT EXISTS geo_cache(
     id INTEGER NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     username VARCHAR(50) NOT NULL,
     note VARCHAR(250) NOT NULL,
-    latitude VARCHAR(50),
-    longitude VARCHAR(50),
+    latitude DOUBLE PRECISION,
+    longitude DOUBLE PRECISION,
+    location_name VARCHAR(50),
     secret VARCHAR(50),
     date TIMESTAMP NOT NULL);
 

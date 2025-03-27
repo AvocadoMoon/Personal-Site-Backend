@@ -52,29 +52,30 @@ components:
       type: object
       properties:
         name:
-          maxLength: 50
+          maxLength: 15
           minLength: 3
-          pattern: "^[ -~]+$"
+          pattern: "^$|^[ -~]+$"
           type: string
         note:
           maxLength: 250
           minLength: 3
-          pattern: "^[ -~]+$"
+          pattern: "^$|^[ -~]+$"
           type: string
         secret:
           maxLength: 50
           minLength: 0
-          pattern: "^[ -~]+$"
+          pattern: "^$|^[ -~]+$"
+          type: string
+        locationName:
+          maxLength: 50
+          minLength: 0
+          pattern: "^$|^[ -~]+$"
           type: string
         longitude:
-          maxLength: 20
-          minLength: 0
-          pattern: "^[ -~]+$"
-          type: string
+          type: number
+          format: double
         latitude:
-          maxLength: 20
-          minLength: 0
-          pattern: "^[ -~]+$"
-          type: string
+          type: number
+          format: double
         date:
           type: string
