@@ -1,7 +1,9 @@
 package com.ezequielvalencia.backend.controller;
 
+import com.ezequielvalencia.backend.ImproperInputText;
 import com.ezequielvalencia.backend.db.GeoCacheRepo;
 import com.ezequielvalencia.backend.models.db.GeoCacheDBModel;
+import com.modernmt.text.profanity.ProfanityFilter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -26,13 +28,27 @@ public class GeoCache {
 //    https://docs.oracle.com/javase/6/docs/api/java/util/regex/Pattern.html
 //    https://stackoverflow.com/questions/1247762/regex-for-all-printable-characters
     public static final String printableCharsOnlyOrEmptyRegex = "^$|^[ -~]+$";
+//    https://blog.codinghorror.com/the-problem-with-urls/
+//    https://stackoverflow.com/questions/6038061/regular-expression-to-find-urls-within-a-string
+    public static final String detectURLRegex = "(http|ftp|https):\\/\\/([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:\\/~+#-]*[\\w@?^=%&\\/~+#-])";
+
+    private static final java.util.regex.Pattern detectURL = java.util.regex.Pattern.compile(detectURLRegex, java.util.regex.Pattern.CASE_INSENSITIVE);
 
     @Autowired
     GeoCacheRepo geoCacheRepo;
 
+    private final ProfanityFilter profanityFilter = new ProfanityFilter();
+
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(operationId = "sendSubmission", description = "Send a geo cache submission to the endpoint.")
     public void takeSubmission(@Valid @RequestBody GeoCacheSubmission geoCacheSubmission){
+        if (profanityFilter.test(geoCacheSubmission.note) || profanityFilter.test(geoCacheSubmission.name)
+        || profanityFilter.test(geoCacheSubmission.secret) || profanityFilter.test(geoCacheSubmission.locationName)){
+            throw new ImproperInputText("Can't submit profanity.");
+        } else if (detectURL.matcher(geoCacheSubmission.note).find() || detectURL.matcher(geoCacheSubmission.name).find() ||
+        detectURL.matcher(geoCacheSubmission.secret).find() || detectURL.matcher(geoCacheSubmission.locationName).find()){
+            throw new ImproperInputText("Can't post a URL.");
+        }
         geoCacheRepo.saveAndFlush(new GeoCacheDBModel(
                 geoCacheSubmission.name, geoCacheSubmission.note, geoCacheSubmission.secret, LocalDateTime.now(),
                 geoCacheSubmission.latitude, geoCacheSubmission.longitude,

@@ -26,6 +26,14 @@
 		<tag/>
 		<url/>
 	</scm>
+
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+
 	<properties>
 		<java.version>23</java.version>
 	</properties>
@@ -86,6 +94,13 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
+<!--		https://jitpack.io/#AvocadoMoon/profanity-filter/main-SNAPSHOT -->
+		<dependency>
+			<groupId>com.github.AvocadoMoon</groupId>
+			<artifactId>profanity-filter</artifactId>
+			<version>v1.1</version>
 		</dependency>
 
 
