@@ -6,6 +6,7 @@ import com.ezequielvalencia.backend.models.db.GeoCacheDBModel;
 import com.modernmt.text.profanity.ProfanityFilter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -17,8 +18,12 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.annotation.RequestScope;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestScope
@@ -37,7 +42,18 @@ public class GeoCache {
     @Autowired
     GeoCacheRepo geoCacheRepo;
 
+    @Autowired
+    HttpServletRequest request;
+
     private final ProfanityFilter profanityFilter = new ProfanityFilter();
+
+    // Static because the class is request scoped
+    private static final LinkedHashMap<String, LastSubmission> recentSubmissions = new LinkedHashMap<>(){
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<String, LastSubmission> eldest) {
+            return size() > 500; // Max size for hashmap of 500
+        }
+    };
 
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(operationId = "sendSubmission", description = "Send a geo cache submission to the endpoint.")
@@ -49,11 +65,41 @@ public class GeoCache {
         detectURL.matcher(geoCacheSubmission.secret).find() || detectURL.matcher(geoCacheSubmission.locationName).find()){
             throw new ImproperInputText("Can't post a URL.");
         }
+
+        LocalDateTime today = LocalDateTime.now();
+
+        // Three per day to submit
+        String ipAddress = request.getLocalAddr();
+        if (recentSubmissions.containsKey(ipAddress)){
+            LastSubmission latestSubmission = recentSubmissions.get(ipAddress);
+            boolean maxSubmissions = latestSubmission.count >= 3;
+            boolean submissionToday = latestSubmission.mostRecentSubmission.isEqual(today.toLocalDate());
+            if (maxSubmissions && submissionToday){
+                throw new ImproperInputText("Max submissions sent.");
+            } else if (submissionToday){
+                latestSubmission.count += 1;
+            } else{
+                latestSubmission.mostRecentSubmission = today.toLocalDate();
+                latestSubmission.count = 1;
+            }
+        } else{
+            recentSubmissions.put(ipAddress, new LastSubmission(1, today.toLocalDate()));
+        }
+
         geoCacheRepo.saveAndFlush(new GeoCacheDBModel(
-                geoCacheSubmission.name, geoCacheSubmission.note, geoCacheSubmission.secret, LocalDateTime.now(),
+                geoCacheSubmission.name, geoCacheSubmission.note, geoCacheSubmission.secret, today,
                 geoCacheSubmission.latitude, geoCacheSubmission.longitude,
                 geoCacheSubmission.locationName
         ));
+    }
+
+    private static class LastSubmission{
+        Integer count;
+        LocalDate mostRecentSubmission;
+        public LastSubmission(Integer count, LocalDate mostRecentSubmission){
+            this.count = count;
+            this.mostRecentSubmission = mostRecentSubmission;
+        }
     }
 
     @ApiResponse(responseCode = "200")
