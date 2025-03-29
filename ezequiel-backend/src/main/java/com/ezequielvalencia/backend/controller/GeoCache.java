@@ -4,6 +4,8 @@ import com.ezequielvalencia.backend.ImproperInputText;
 import com.ezequielvalencia.backend.db.GeoCacheRepo;
 import com.ezequielvalencia.backend.models.db.GeoCacheDBModel;
 import com.modernmt.text.profanity.ProfanityFilter;
+import com.slack.api.Slack;
+import com.slack.api.webhook.Payload;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +13,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.annotation.RequestScope;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
@@ -37,6 +42,8 @@ public class GeoCache {
     public static final String detectURLRegex = "(http|ftp|https):\\/\\/([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:\\/~+#-]*[\\w@?^=%&\\/~+#-])";
 
     private static final java.util.regex.Pattern detectURL = java.util.regex.Pattern.compile(detectURLRegex, java.util.regex.Pattern.CASE_INSENSITIVE);
+
+    private static final Logger logger = LogManager.getLogger(GeoCache.class);
 
     @Autowired
     GeoCacheRepo geoCacheRepo;
@@ -87,6 +94,19 @@ public class GeoCache {
         } else{
             recentSubmissions.put(ipAddress, new LastSubmission(1, today.toLocalDate()));
         }
+
+        Thread slackNotification = new Thread(() -> {
+            try {
+                String text = String.format("Username: %s\nNote: %s\nSecret: %s\nLocation Name: %s\n",
+                        geoCacheSubmission.name, geoCacheSubmission.note, geoCacheSubmission.secret, geoCacheSubmission.locationName);
+
+                Payload payload = Payload.builder().text(text).build();
+                Slack.getInstance().send(System.getenv("SLACK_WEBHOOK"), payload);
+            } catch (IOException e) {
+                logger.error("Can't Send Slack Messages.", e);
+            }
+        });
+        slackNotification.start();
 
         geoCacheRepo.saveAndFlush(new GeoCacheDBModel(
                 geoCacheSubmission.name, geoCacheSubmission.note, geoCacheSubmission.secret, today,
