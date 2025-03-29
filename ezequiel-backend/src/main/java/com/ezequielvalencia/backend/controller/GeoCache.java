@@ -20,7 +20,6 @@ import org.springframework.web.context.annotation.RequestScope;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +43,8 @@ public class GeoCache {
 
     @Autowired
     HttpServletRequest request;
+
+    public static boolean increaseSubmissionLimit = false;
 
     private final ProfanityFilter profanityFilter = new ProfanityFilter();
 
@@ -72,7 +73,8 @@ public class GeoCache {
         String ipAddress = request.getLocalAddr();
         if (recentSubmissions.containsKey(ipAddress)){
             LastSubmission latestSubmission = recentSubmissions.get(ipAddress);
-            boolean maxSubmissions = latestSubmission.count >= 3;
+            int maxSub = increaseSubmissionLimit ? 20 : 3;
+            boolean maxSubmissions = latestSubmission.count >= maxSub;
             boolean submissionToday = latestSubmission.mostRecentSubmission.isEqual(today.toLocalDate());
             if (maxSubmissions && submissionToday){
                 throw new ImproperInputText("Max submissions sent.");

@@ -5,8 +5,8 @@ import com.ezequiel.ApiException;
 import com.ezequiel.Configuration;
 import com.ezequiel.api.GeoCacheApi;
 import com.ezequiel.model.GeoCacheSubmission;
+import com.ezequielvalencia.backend.controller.GeoCache;
 import com.ezequielvalencia.backend.db.DBHandler;
-import org.junit.Assert;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,6 +37,7 @@ class BackendApplicationTests {
 	@BeforeAll
 	static void beforeAll() throws URISyntaxException, IOException {
 		postgres.start();
+		GeoCache.increaseSubmissionLimit = true;
 	}
 
 	@BeforeEach
@@ -47,6 +48,7 @@ class BackendApplicationTests {
 	@AfterAll
 	static void afterAll() {
 		postgres.stop();
+		GeoCache.increaseSubmissionLimit = false;
 	}
 
 	@DynamicPropertySource
