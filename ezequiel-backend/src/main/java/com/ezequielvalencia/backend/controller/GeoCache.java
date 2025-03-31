@@ -141,7 +141,7 @@ public class GeoCache {
 
     public static class GeoCacheSubmission{
         @NotNull
-        @Size(max = 15, min = 3, message = "Size discrepancy: name.")
+        @Size(max = 15, min = 2, message = "Size discrepancy: name.")
         @Pattern(regexp = GeoCache.printableCharsOnlyOrEmptyRegex, message = "Not printable characters: name.")
         public String name;
 
